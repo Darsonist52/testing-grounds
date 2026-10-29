@@ -44,14 +44,20 @@ for i in range(numContainers):
 		mainUrl + "/probe/" + probeID + "/storage-containers/" + containerID,
 		headers={"Authorization": f"Bearer {apiKey}"}
 	)
-	"""
 	containerData = containerInfo.json()
-	numItems = len(containerData['inventory']['items'])
-	for i in range(numItems):
-		totalMetal += containerData['inventory']['items'][i]['cargo']['metal']
-		totalCarbon += containerData['inventory']['items'][i]['cargo']['carbon']
-		totalIce += containerData['inventory']['items'][i]['cargo']['ice']
-"""
+	numContainers = len(json.loads(json.dumps(containerData))['inventory']['resourceStocks'])
+	for i in range(numContainers):
+		if(containerData['inventory']['resourceStocks'][i]['type'] == "metals"):
+			totalMetal += containerData['inventory']['resourceStocks'][i]['amount']
+	for i in range(numContainers):
+		if(containerData['inventory']['resourceStocks'][i]['type'] == "ice"):
+			totalIce += containerData['inventory']['resourceStocks'][i]['amount']		
+	for i in range(numContainers):
+		if(containerData['inventory']['resourceStocks'][i]['type'] == "organic_compounds"):
+			totalCarbon += containerData['inventory']['resourceStocks'][i]['amount']
 
 
+print(str(totalMetal) + " metals in total.")
+print(str(totalIce) + " ice in total.")
+print(str(totalCarbon) + " carbon compounds in total.")
 print("Probe " + probeID + " has " + str(totalFreeSpace) + " free capacity in total.")
