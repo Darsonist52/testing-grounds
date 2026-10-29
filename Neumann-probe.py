@@ -53,7 +53,7 @@ for i in range(numContainers):
 		if(containerData['inventory']['resourceStocks'][i]['type'] == "ice"):
 			totalIce += containerData['inventory']['resourceStocks'][i]['amount']		
 	for i in range(numContainers):
-		if(containerData['inventory']['resourceStocks'][i]['type'] == "organic_compounds"):
+		if(containerData['inventory']['resourceStocks'][i]['type'] == "carbon_compounds"):
 			totalCarbon += containerData['inventory']['resourceStocks'][i]['amount']
 
 
