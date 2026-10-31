@@ -21,3 +21,5 @@ targetID = input("Input the ID of the probe you want to focus on: ")
 
 getFreeSpace(targetID)
 getProbeMetal(targetID)
+getProbeCarbonCompounds(targetID)
+getProbeIce(targetID)
