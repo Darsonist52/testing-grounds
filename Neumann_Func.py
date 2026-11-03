@@ -13,6 +13,11 @@ authHeader = {
     "Authorization": f"Bearer {apiKey}"
 }
 
+# File variables
+metalSupplies = ['A']
+carbonSupplies = ['A']
+iceSupplies = ['A']
+
 #List out all user probes by name and ID, 1 API request
 def listProbes():
     # Request from API for list of probes
@@ -78,6 +83,10 @@ def getProbeMetal(probeID):
 
     # Print amount of metal in probe
     print("For probe " + probeID + " you have " + str(totalMetal) + " ECE of metals in storage.")
+    
+    # Updates cache and prevents the death of nick
+    metalSupplies.pop(0)
+    metalSupplies.append(totalMetal)
     return totalMetal
 
 # Returns the total amount of carbon compounds in the specified probe. 1 + num of containers on specified probe API requests
@@ -108,6 +117,10 @@ def getProbeCarbonCompounds(probeID):
 
     # Prints the number of Carbon Compounds in the probe
     print("For probe " + probeID + " you have " + str(totalCarbonCompounds) + " ECE of carbon compounds in storage.") 
+    
+    # Updates cache and prevents the death of nick
+    carbonSupplies.pop(0)
+    carbonSupplies.append(totalCarbonCompounds)
     return(totalCarbonCompounds)
 
 # Returns the total amount of ice in the specified probe. 1 + num of containers on specified probe API requests
@@ -138,4 +151,24 @@ def getProbeIce(probeID):
 
     # Prints the number of ice in the probe
     print("For probe " + probeID + " you have " + str(totalIce) + " ECE of ice in storage.") 
+    
+    # Updates cache and prevents the death of nick
+    iceSupplies.pop(0)
+    iceSupplies.append(totalIce)
     return(totalIce)
+
+# You guessed it, makes a container
+def makeContainer(probeID, numConReq):
+
+    return
+
+# Splits up the wanted resources among the available mannies for mining. 
+def delegateMining(probeID):
+    # Get info on current sector
+    response = requests.get(mainUrl + '/api/probe/'+probeID + '/sector', headers = authHeader)
+    sectorInfo = response.json()
+    
+    # Find the number of minable objects in the probe's current sector.
+    numMinables = len(json.loads(json.dumps(sectorInfo))['sector']['objects'][0]['minableTargets'])
+    
+    return
