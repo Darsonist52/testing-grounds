@@ -8,7 +8,7 @@ import json
 
 # Main URL, API key, and API get / post auth header
 mainUrl = "https://neumann-probe.net"
-apiKey = "vng_Y13DbU-0EccDc-7Q8pgLSdq8esyMWRRkQxGYJ1tt_Rs"
+apiKey = "   "
 authHeader = {
     "Authorization": f"Bearer {apiKey}"
 }
@@ -163,12 +163,37 @@ def makeContainer(probeID, numConReq):
     return
 
 # Splits up the wanted resources among the available mannies for mining. 
-def delegateMining(probeID):
+def delegateMining(probeID, resource):
     # Get info on current sector
     response = requests.get(mainUrl + '/api/probe/'+probeID + '/sector', headers = authHeader)
     sectorInfo = response.json()
+    targetAsteroidID = 0;
     
     # Find the number of minable objects in the probe's current sector.
     numMinables = len(json.loads(json.dumps(sectorInfo))['sector']['objects'][0]['minableTargets'])
+    targetList = sectorInfo['sector']['objects'][0]['minableTargets']
+
+    #for each minable object, find out what resource types it has, if it has the material we need then store its ID so we can mine it
+    for i in range(numMinables):
+        print(targetList[i]['resourceTypes'])
+        #num of materials each obj has
+        numMaterialTypes = len(json.loads(json.dumps(targetList))[i]['resourceTypes'])
+        for j in range(numMaterialTypes):
+            #get each mat type
+            materialType = targetList[i]['resourceTypes'][j]
+            #if mat type = goal save it and print it
+            if(materialType == resource):
+                targetAsteroidID = targetList[i]['id']
+                print(targetAsteroidID)
+
+    if targetAsteroidID != 0 :
+        # get number of free mannies and their IDs
+        # we are going to DIE we need to make a JSON for our post request body HELP
     
+    return
+
+def availableMannies(probeID):
+    response = requests.get(mainUrl + '/api/probe/'+probeID + '/sector', headers = authHeader)
+
+
     return

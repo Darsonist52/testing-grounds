@@ -25,4 +25,4 @@ targetID = input("Input the ID of the probe you want to focus on: ")
 #getProbeIce(targetID)
 
 #WIP
-delegateMining(targetID)
+delegateMining(targetID, "metals")
