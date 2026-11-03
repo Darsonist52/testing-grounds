@@ -19,7 +19,10 @@ listProbes()
 #Asks user which probe they want to focus on and stores the value
 targetID = input("Input the ID of the probe you want to focus on: ")
 
-getFreeSpace(targetID)
-getProbeMetal(targetID)
-getProbeCarbonCompounds(targetID)
-getProbeIce(targetID)
+#getFreeSpace(targetID)
+#getProbeMetal(targetID)
+#getProbeCarbonCompounds(targetID)
+#getProbeIce(targetID)
+
+#WIP
+delegateMining(targetID)
