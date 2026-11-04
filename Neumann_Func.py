@@ -8,7 +8,7 @@ import json
 
 # Main URL, API key, and API get / post auth header
 mainUrl = "https://neumann-probe.net"
-apiKey = "vng_Fv-L1g7wfFv9_Noh0R4AiuDfF921lZnd6uEs5FjVw1g"
+apiKey = " "
 authHeader = {
     "Authorization": f"Bearer {apiKey}"
 }
@@ -187,7 +187,7 @@ def delegateMining(probeID, resource, amount):
         for j in range(numMaterialTypes):
             #get each mat type
             materialType = targetList[i]['resourceTypes'][j]
-            #if mat type = goal save it and print it
+            #if mat type = goal save it to mine
             if(materialType == resource):
                 targetAsteroidID = targetList[i]['id']
 
@@ -226,7 +226,6 @@ def availableMannies(probeID):
             freeMannys.append(mannyInfo['mannies'][i]['id'])
 
     return freeMannys
-
 
 def mineTaskJson(mannyID, asteroidID, resource, amount):
     task = {

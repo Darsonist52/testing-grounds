@@ -11,6 +11,10 @@ Available functions:
 listProbes()
 getFreeSpace(targetID)
 getProbeMetal(targetID)
+"metals"
+"ice"
+"carbon_compounds"
+"deuterium"
 """
 from Neumann_Func import *
 
@@ -25,5 +29,6 @@ targetID = input("Input the ID of the probe you want to focus on: ")
 #getProbeIce(targetID)
 
 #WIP
-amnt = input("How much metal would you like to mine? ")
-delegateMining(targetID, "metals", float(amnt))
+material = input("What material would you like to mine pick one of the following ['metals', 'ice', 'carbon_compounds']: ")
+amnt = input("Enter much would you like to mine in ECE: ")
+delegateMining(targetID, material, float(amnt))
