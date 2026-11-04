@@ -9,7 +9,7 @@ import math
 
 # Main URL, API key, and API get / post auth header
 mainUrl = "https://neumann-probe.net"
-apiKey = "  "
+apiKey = " TEST "
 authHeader = {
     "Authorization": f"Bearer {apiKey}"
 }
