@@ -25,4 +25,5 @@ targetID = input("Input the ID of the probe you want to focus on: ")
 #getProbeIce(targetID)
 
 #WIP
-delegateMining(targetID, "metals")
+amnt = input("How much metal would you like to mine? ")
+delegateMining(targetID, "metals", float(amnt))

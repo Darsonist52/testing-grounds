@@ -8,7 +8,7 @@ import json
 
 # Main URL, API key, and API get / post auth header
 mainUrl = "https://neumann-probe.net"
-apiKey = "   "
+apiKey = "vng_Fv-L1g7wfFv9_Noh0R4AiuDfF921lZnd6uEs5FjVw1g"
 authHeader = {
     "Authorization": f"Bearer {apiKey}"
 }
@@ -163,7 +163,7 @@ def makeContainer(probeID, numConReq):
     return
 
 # Splits up the wanted resources among the available mannies for mining. 
-def delegateMining(probeID, resource):
+def delegateMining(probeID, resource, amount):
     # Get info on current sector
     response = requests.get(mainUrl + '/api/probe/'+probeID + '/sector', headers = authHeader)
     sectorInfo = response.json()
@@ -173,9 +173,15 @@ def delegateMining(probeID, resource):
     numMinables = len(json.loads(json.dumps(sectorInfo))['sector']['objects'][0]['minableTargets'])
     targetList = sectorInfo['sector']['objects'][0]['minableTargets']
 
+    # request to build upon with manny requests to send to the server
+    tasks = {
+        "tasks": [
+        
+        ]
+    }
+
     #for each minable object, find out what resource types it has, if it has the material we need then store its ID so we can mine it
     for i in range(numMinables):
-        print(targetList[i]['resourceTypes'])
         #num of materials each obj has
         numMaterialTypes = len(json.loads(json.dumps(targetList))[i]['resourceTypes'])
         for j in range(numMaterialTypes):
@@ -184,16 +190,55 @@ def delegateMining(probeID, resource):
             #if mat type = goal save it and print it
             if(materialType == resource):
                 targetAsteroidID = targetList[i]['id']
-                print(targetAsteroidID)
 
+    #if there is an asteroid with the resource in the system
     if targetAsteroidID != 0 :
-        # get number of free mannies and their IDs
-        # we are going to DIE we need to make a JSON for our post request body HELP
-    
+        freeMannys = availableMannies(probeID)
+        numFreeMannys = len(freeMannys)
+        # if free mannys exist
+        if numFreeMannys != 0:
+            ecePerManny = amount / numFreeMannys
+            # for each free manny
+            for j in range(numFreeMannys):
+                mannyID = freeMannys[j]
+                #create a mannyTask json
+                mannyTask = mineTaskJson(mannyID, targetAsteroidID, resource, ecePerManny)
+                #add the manny task to the list of requested actions
+                tasks['tasks'].append((mannyTask))
+            #send the server the end list of requested actions
+            server = requests.post(mainUrl + "/api/probe/" + probeID + "/mannies/tasks", json=tasks, headers=authHeader)
+            #print the response from the server
+            print(server)
+        # if there are no free mannies, refuse to do ANYTHING and inform the user
+        else:
+            print("No free mannies to mine")
+
     return
 
 def availableMannies(probeID):
-    response = requests.get(mainUrl + '/api/probe/'+probeID + '/sector', headers = authHeader)
+    freeMannys = []
+    response = requests.get(mainUrl + '/api/probe/'+probeID + '/mannies', headers = authHeader)
+    mannyInfo = response.json()
+    numMannys = len(json.loads(json.dumps(mannyInfo))['mannies'])
+
+    for i in range(numMannys):
+        if mannyInfo['mannies'][i]['currentTask'] == None :
+            freeMannys.append(mannyInfo['mannies'][i]['id'])
+
+    return freeMannys
 
 
-    return
+def mineTaskJson(mannyID, asteroidID, resource, amount):
+    task = {
+
+    }
+
+    resources = [resource]
+
+    task["mannyId"] = mannyID
+    task["task"] = "mine"
+    task["payload"]= {}
+    task["payload"]["objectId"] = asteroidID
+    task["payload"]["resources"] = resources
+    task["payload"]["targetAmount"] = amount
+    return task
