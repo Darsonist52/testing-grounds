@@ -24,11 +24,16 @@ listProbes()
 targetID = input("Input the ID of the probe you want to focus on: ")
 
 #getFreeSpace(targetID)
-#getProbeMetal(targetID)
 #getProbeCarbonCompounds(targetID)
 #getProbeIce(targetID)
 
 #WIP
+<<<<<<< HEAD
 material = input("What material would you like to mine pick one of the following ['metals', 'ice', 'carbon_compounds', 'deuterium']: ")
 amnt = input("Enter much would you like to mine in ECE (For deuterium, 1 percent is .01 ECE): ")
 delegateMining(targetID, material, float(amnt))
+=======
+#delegateMining(targetID)
+
+queryProbeInventory(targetID)
+>>>>>>> 478b4a3 (Better resource functions)
