@@ -18,6 +18,8 @@ authHeader = {
 metalSupplies = ['A']
 carbonSupplies = ['A']
 iceSupplies = ['A']
+deuteriumSupplies = ['A']
+freeCapacity = ['A']
 
 #List out all user probes by name and ID, 1 API request
 def listProbes():
@@ -36,127 +38,39 @@ def listProbes():
         print("Probe named " + probeName + " has an ID of " + probeID)
     return
 
-# Returns total used and free space, as well as total storage for a given probe. 1 API request
-def getFreeSpace(probeID):
-    # Declare func variables
-    totalFreeSpace = 0
-    totalUsedSpace = 0
-    # Request from API for list of containers
-    response = requests.get( mainUrl + "/api/probe/" + probeID + "/storage-containers", headers=authHeader)
-    containerList = response.json()
-    
-    # Find num of containers
-    numContainers = len(json.loads(json.dumps(containerList))['containers'])
+# Finds the values for all of the resources on the given probe, calls the API 1 time.
+def queryProbeInventory(probeID):
+    # Get the info about the sector from the API
+    response = requests.get(mainUrl + "/api/probe/" + probeID + "/sector", headers=authHeader)
+    sectorData = response.json()
 
-    # For each container, add up free sapce and used space.
-    for i in range(numContainers):
-        totalFreeSpace += containerList['containers'][i]['freeCapacity']
-        totalUsedSpace += containerList['containers'][i]['usedCapacity']
+    # Finds and stores the free capacity of the target probe in the queue. 
+    freeECE = sectorData['inventory']['freeCapacity']
+    freeCapacity.pop(0)
+    freeCapacity.append(freeECE)
 
-    # Print amount of space used out of total number of containers
-    print("For probe " + probeID + " you have used " + str(totalUsedSpace) + " ECE out of " + str(totalFreeSpace + totalUsedSpace) +" ECE, which leaves " + str(totalFreeSpace) + " ECE free for use.")
-    return totalFreeSpace
-
-# Returns total amount of metal in given probe. 1 + num containers API requests
-def getProbeMetal(probeID):
-    totalMetal = 0
-    # Request from API for list of containers
-    response = requests.get( mainUrl + "/api/probe/" + probeID + "/storage-containers", headers=authHeader)
-    containerList = response.json()
-    
-    # Find num of containers
-    numContainers = len(json.loads(json.dumps(containerList))['containers'])
-
-    # Add up metal from each container
-    for i in range(numContainers):
-        # Find each container ID
-        containerID = containerList['containers'][i]['id']
-        
-        # Get each containers information from api
-        response = requests.get(mainUrl + "/api/probe/" + probeID + "/storage-containers/" + containerID, headers=authHeader)
-        containerData = response.json()
-
-        # Get each containers number of resources
-        numResources = len(json.loads(json.dumps(containerData))['inventory']['resourceStocks'])
-        for j in range(numResources):    
-            if(containerData['inventory']['resourceStocks'][j]['type'] == "metals"):
-                totalMetal += containerData['inventory']['resourceStocks'][j]['amount']	
-
-    # Print amount of metal in probe
-    print("For probe " + probeID + " you have " + str(totalMetal) + " ECE of metals in storage.")
-    
-    # Updates cache and prevents the death of nick
+    # Finds and stores the amount of metals in the queue.
+    totalMetals = sectorData['inventory']['resourceStocks'][0]['amount']
     metalSupplies.pop(0)
-    metalSupplies.append(totalMetal)
-    return totalMetal
+    metalSupplies.append(totalMetals)
 
-# Returns the total amount of carbon compounds in the specified probe. 1 + num of containers on specified probe API requests
-def getProbeCarbonCompounds(probeID):
-    totalCarbonCompounds = 0
-    
-    # Request from API for list of containers
-    response = requests.get( mainUrl + "/api/probe/" + probeID + "/storage-containers", headers=authHeader)
-    containerList = response.json()
-        
-    # Find num of containers
-    numContainers = len(json.loads(json.dumps(containerList))['containers'])
-
-    # Add up number of carbon compounds in each container
-    for i in range(numContainers):
-            # Find each container ID
-            containerID = containerList['containers'][i]['id']
-            
-            # Get each containers information from api
-            response = requests.get(mainUrl + "/api/probe/" + probeID + "/storage-containers/" + containerID, headers=authHeader)
-            containerData = response.json()
-            
-            # Get each containers number of resources
-            numResources = len(json.loads(json.dumps(containerData))['inventory']['resourceStocks'])
-            for j in range(numResources):    
-                if(containerData['inventory']['resourceStocks'][j]['type'] == "carbon_compounds"):
-                    totalCarbonCompounds += containerData['inventory']['resourceStocks'][j]['amount']
-
-    # Prints the number of Carbon Compounds in the probe
-    print("For probe " + probeID + " you have " + str(totalCarbonCompounds) + " ECE of carbon compounds in storage.") 
-    
-    # Updates cache and prevents the death of nick
-    carbonSupplies.pop(0)
-    carbonSupplies.append(totalCarbonCompounds)
-    return(totalCarbonCompounds)
-
-# Returns the total amount of ice in the specified probe. 1 + num of containers on specified probe API requests
-def getProbeIce(probeID):
-    totalIce = 0
-    
-    # Request from API for list of containers
-    response = requests.get( mainUrl + "/api/probe/" + probeID + "/storage-containers", headers=authHeader)
-    containerList = response.json()
-        
-    # Find num of containers
-    numContainers = len(json.loads(json.dumps(containerList))['containers'])
-
-    # Add up number of ice in each container
-    for i in range(numContainers):
-            # Find each container ID
-            containerID = containerList['containers'][i]['id']
-            
-            # Get each containers information from api
-            response = requests.get(mainUrl + "/api/probe/" + probeID + "/storage-containers/" + containerID, headers=authHeader)
-            containerData = response.json()
-            
-            # Get each containers number of resources
-            numResources = len(json.loads(json.dumps(containerData))['inventory']['resourceStocks'])
-            for j in range(numResources):    
-                if(containerData['inventory']['resourceStocks'][j]['type'] == "ice"):
-                    totalIce += containerData['inventory']['resourceStocks'][j]['amount']
-
-    # Prints the number of ice in the probe
-    print("For probe " + probeID + " you have " + str(totalIce) + " ECE of ice in storage.") 
-    
-    # Updates cache and prevents the death of nick
+    # Finds and stores the amount of ice in the queue.
+    totalIce = sectorData['inventory']['resourceStocks'][1]['amount']
     iceSupplies.pop(0)
     iceSupplies.append(totalIce)
-    return(totalIce)
+
+    # Finds and storse the amount of carbon compounds in the queue.
+    totalCarbonCompounds = sectorData['inventory']['resourceStocks'][2]['amount']
+    carbonSupplies.pop(0)
+    carbonSupplies.append(totalCarbonCompounds)
+
+    # Finds and stores the amount of deuterium in the queue.
+    totalDeuterium = sectorData['inventory']['externalTanks'][0]['fillPercent']
+    # Converts the deuterium value from a percentage to an ECE value
+    totalDeuterium = totalDeuterium/100
+    deuteriumSupplies.pop(0)
+    deuteriumSupplies.append(totalDeuterium)
+    return
 
 # You guessed it, makes a container
 def makeContainer(probeID, numConReq):
