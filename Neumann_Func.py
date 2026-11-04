@@ -5,10 +5,11 @@ Directory for Neumann-script.py
 # Import libraries
 import requests
 import json
+import math
 
 # Main URL, API key, and API get / post auth header
 mainUrl = "https://neumann-probe.net"
-apiKey = " "
+apiKey = "vng_0ilfdkY-UDITxzvY1o0o0JYrwpZCIWiLrpkpaXVSQnM"
 authHeader = {
     "Authorization": f"Bearer {apiKey}"
 }
@@ -197,7 +198,8 @@ def delegateMining(probeID, resource, amount):
         numFreeMannys = len(freeMannys)
         # if free mannys exist
         if numFreeMannys != 0:
-            ecePerManny = amount / numFreeMannys
+            temp = amount / numFreeMannys
+            ecePerManny = math.ceil(temp*100)/100
             # for each free manny
             for j in range(numFreeMannys):
                 mannyID = freeMannys[j]

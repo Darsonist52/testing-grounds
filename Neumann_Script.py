@@ -29,6 +29,6 @@ targetID = input("Input the ID of the probe you want to focus on: ")
 #getProbeIce(targetID)
 
 #WIP
-material = input("What material would you like to mine pick one of the following ['metals', 'ice', 'carbon_compounds']: ")
-amnt = input("Enter much would you like to mine in ECE: ")
+material = input("What material would you like to mine pick one of the following ['metals', 'ice', 'carbon_compounds', 'deuterium']: ")
+amnt = input("Enter much would you like to mine in ECE (For deuterium, 1 percent is .01 ECE): ")
 delegateMining(targetID, material, float(amnt))
