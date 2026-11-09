@@ -9,7 +9,7 @@ import math
 
 # Main URL, API key, and API get / post auth header
 mainUrl = "https://neumann-probe.net"
-apiKey = "vng_lB807-k62WxF99R3vcp2J1v4GMPdu9qB8VrCrO9Z4Tk"
+apiKey = "API KEY HERE"
 authHeader = {
     "Authorization": f"Bearer {apiKey}"
 }
@@ -139,7 +139,8 @@ def delegateMining(probeID, resource, amount):
 
     else:
 
-        resourcesToMine = amount/len(freeMannies)
+        resourcesToMine = (amount/len(freeMannies))*100
+        resourcesToMine = math.ceil(resourcesToMine)/100
 
         for i in range(len(freeMannies)):
             mannyTask = mineTaskJson(freeMannies[i], asteroidId, resource, resourcesToMine)
