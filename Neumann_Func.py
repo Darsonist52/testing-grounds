@@ -9,7 +9,7 @@ import math
 
 # Main URL, API key, and API get / post auth header
 mainUrl = "https://neumann-probe.net"
-apiKey = " TEST "
+apiKey = "vng_lB807-k62WxF99R3vcp2J1v4GMPdu9qB8VrCrO9Z4Tk"
 authHeader = {
     "Authorization": f"Bearer {apiKey}"
 }
@@ -20,6 +20,8 @@ carbonSupplies = ['A']
 iceSupplies = ['A']
 deuteriumSupplies = ['A']
 freeCapacity = ['A']
+craftingQueue = []
+
 
 #List out all user probes by name and ID, 1 API request
 def listProbes():
@@ -72,10 +74,25 @@ def queryProbeInventory(probeID):
     deuteriumSupplies.append(totalDeuterium)
     return
 
-# You guessed it, makes a container
-def makeContainer(probeID, numConReq):
+#
+def queueCrafting(probeID):
+    
+        
+    return
+
+# WIP You guessed it, makes a container
+"""""
+def makeContainer(probeID):
+    freeMannies = availableMannies(probeID)
+    containersWanted = input("Enter the number of containers you want to construct: ")
+    print("You have enough metals for " + metalSupplies(0)/0.54 +" containers.")
+    if (metalSupplies[0]>= containersWanted*0.54):
+        #for i in len(freeMannies):
+    else:
+        print("Not enough metals for an additional container. ")
 
     return
+"""
 
 # Splits up the wanted resources among the available mannies for mining. 
 def delegateMining(probeID, resource, amount):
