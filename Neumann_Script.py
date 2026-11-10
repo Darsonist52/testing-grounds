@@ -7,36 +7,55 @@ To run:
 2. Type in commandline: python Neumann_Script.py
 3. When prompted, enter the probeID out of the list given you want to focus on
 
-Available functions:
-listProbes()
-getFreeSpace(targetID)
-getProbeMetal(targetID)
 "metals"
 "ice"
 "carbon_compounds"
 "deuterium"
 """
 from Neumann_Func import *
+import time
 
-listProbes()
+probeID = ""
+validID = False
+timer = 1
+task = ""
 
-#Asks user which probe they want to focus on and stores the value
-targetID = input("Input the ID of the probe you want to focus on: ")
+#runs once when program begins
+def startUp():
+    print("Initiating program..")
+    listProbes()
+    probeID = input("Input the ID of the probe you would like to manage: ")
+    task = input("Using probe " + probeID + " would you like to 'mine' or 'craft'? ")
 
-queryProbeInventory(targetID)
+    if (task == "mine"):
+        print("Instantiating mining protocol...")
+        print(" ")
+        cacheProbeInventory(probeID)
+        print("What material would you like to mine? Choose from the below choices: ")
+        print("metals, ice, carbon_compounds, deuterium")
+        material = input(" ")
+        print("How much " + material + " would you like gathered?")
+        amnt = input(" ")
+        delegateMining(probeID, material, float(amnt))
 
-response = input("Would you like to 'mine' or 'craft', enter any other phrase to quit program. ")
-if response == "mine":
-    print("Initiating mining protocol...")
+    elif (task == "craft"):
+        print("Instantiating crafting protocol...")
+        print(" ")
+        cacheRecipes()
+        print("What would you like to craft? ")
+        recipe = input(" ")
+        print("How much of " + recipe + " would you like to craft?")
+        amnt = input(" ")
+        productionLoop()
 
-    material = input("What material would you like to mine pick one of the following ['metals', 'ice', 'carbon_compounds', 'deuterium']: ")
-    amnt = input("Enter much would you like to mine in ECE (For deuterium, 1 percent is .01 ECE): ")
-    delegateMining(targetID, material, float(amnt))
+    else:
+        print("ERROR: Invalid task")
 
-elif response == "craft":
-    print("Initiating crafting protocol...")
+    return
 
-    request = input("What would you like to craft? Please use exact capitalisation and spelling. ")
-    amnt = input("How many of these would you like to craft?")
+def productionLoop():
     
+    return
 
+
+startUp()

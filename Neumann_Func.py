@@ -1,6 +1,7 @@
 """
 Developed for https://neumann-probe.net/
 Directory for Neumann-script.py
+API max query amount is ??? per ???
 """
 # Import libraries
 import requests
@@ -24,31 +25,29 @@ craftingRecipes = {}
 craftingQueue = []
 
 
-#List out all user probes by name and ID, 1 API request
+#List out all user probes by name and ID, and update recipe list 2 API request
 def listProbes():
     # Request from API for list of probes
     response = requests.get( mainUrl + "/api/probes", headers=authHeader)
     probeData = response.json()
-
     # Find num of probes
     numProbes = len(json.loads(json.dumps(probeData))['probes'])
-    print("You have a total of: " + str(numProbes) + " probe(s)!")
 
     # For each probe, list out name and ID
     for i in range (numProbes):
         probeName = probeData['probes'][i]['name']
         probeID = str(probeData['probes'][i]['id'])
         print("Probe named " + probeName + " has an ID of " + probeID)
+    return
 
-    #while we are here, populate recipe list.
+def cacheRecipes():
     response = requests.get(mainUrl + "/api/crafting-recipes", headers=authHeader)
     craftingData = response.json()
     craftingRecipes = craftingData
-    
     return
 
 # Finds the values for all of the resources on the given probe, calls the API 1 time.
-def queryProbeInventory(probeID):
+def cacheProbeInventory(probeID):
     # Get the info about the sector from the API
     response = requests.get(mainUrl + "/api/probe/" + probeID + "/sector", headers=authHeader)
     sectorData = response.json()
@@ -81,31 +80,29 @@ def queryProbeInventory(probeID):
     deuteriumSupplies.append(totalDeuterium)
     return
 
-#
-def queueCrafting(probeID):
+# Returns amounts of a chosen resource
+def queryResourceAmnt(probeID, resource):
+
+    return
+
+# Adds crafting tasks to the queue
+def queueCrafting(probeID, recipeName, quantity):
     
         
     return
 
-def getComponents():
+# Finds and returns all needed components of a required recipe, subtracting what is in probe storage
+def getComponents(recipeName):
+    
 
+    return
+
+# Is it crafted by mannys or by the printer? Return
+def getCraftingMethod(recipeName):
 
     return
 
-# WIP You guessed it, makes a container
-"""""
-def makeContainer(probeID):
-    freeMannies = availableMannies(probeID)
-    containersWanted = input("Enter the number of containers you want to construct: ")
-    print("You have enough metals for " + metalSupplies(0)/0.54 +" containers.")
-    if (metalSupplies[0]>= containersWanted*0.54):
-        #for i in len(freeMannies):
-    else:
-        print("Not enough metals for an additional container. ")
-
-    return
-"""
-# Splits up the wanted resources among the available mannies for mining. 
+# Splits up the wanted resources among the available mannies for mining. 1 API request + 1 API post
 def delegateMining(probeID, resource, amount):
 
     tasks = {
@@ -114,7 +111,7 @@ def delegateMining(probeID, resource, amount):
         ]
     }
 
-    #Finds the total amount of trips and rounds UP to the nearest integer
+    #Finds the total amount of trips and rounds UP to the nearest integer 
     tripCount = amount/.05
     tripCount = math.ceil(tripCount)
 
@@ -160,6 +157,7 @@ def delegateMining(probeID, resource, amount):
     print(requests.post(mainUrl + "/api/probe/" + probeID + "/mannies/tasks", json=tasks, headers = authHeader))
     return
 
+# return array of availableManny id's, 1 API request
 def availableMannies(probeID):
     freeMannys = []
     response = requests.get(mainUrl + '/api/probe/'+probeID + '/mannies', headers = authHeader)
@@ -172,6 +170,7 @@ def availableMannies(probeID):
 
     return freeMannys
 
+# formats manny mining work orders into json format
 def mineTaskJson(mannyID, asteroidID, resource, amount):
     task = {
 
