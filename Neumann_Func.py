@@ -9,7 +9,7 @@ import math
 
 # Main URL, API key, and API get / post auth header
 mainUrl = "https://neumann-probe.net"
-apiKey = "API KEY HERE"
+apiKey = "vng_NKGtXQRDbTHZoSiGiS2VHze30rmO2raL3PsusGhzd3Y"
 authHeader = {
     "Authorization": f"Bearer {apiKey}"
 }
@@ -20,6 +20,7 @@ carbonSupplies = ['A']
 iceSupplies = ['A']
 deuteriumSupplies = ['A']
 freeCapacity = ['A']
+craftingRecipes = {}
 craftingQueue = []
 
 
@@ -38,6 +39,12 @@ def listProbes():
         probeName = probeData['probes'][i]['name']
         probeID = str(probeData['probes'][i]['id'])
         print("Probe named " + probeName + " has an ID of " + probeID)
+
+    #while we are here, populate recipe list.
+    response = requests.get(mainUrl + "/api/crafting-recipes", headers=authHeader)
+    craftingData = response.json()
+    craftingRecipes = craftingData
+    
     return
 
 # Finds the values for all of the resources on the given probe, calls the API 1 time.
@@ -80,6 +87,11 @@ def queueCrafting(probeID):
         
     return
 
+def getComponents():
+
+
+    return
+
 # WIP You guessed it, makes a container
 """""
 def makeContainer(probeID):
@@ -93,7 +105,6 @@ def makeContainer(probeID):
 
     return
 """
-
 # Splits up the wanted resources among the available mannies for mining. 
 def delegateMining(probeID, resource, amount):
 
